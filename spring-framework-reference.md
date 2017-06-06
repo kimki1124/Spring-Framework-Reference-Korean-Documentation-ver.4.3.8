@@ -5,10 +5,8 @@
 - - -
 # 목차
 
-<!-- toc orderedList:0 depthFrom:1 depthTo:6 -->
 
-* [스프링 프레임워크 레퍼런스 문서 Ver. 4.3.8 RELEASE](#스프링-프레임워크-레퍼런스-문서-ver-438-release)
-* [목차](#목차)
+<!-- toc orderedList:0 depthFrom:1 depthTo:6 -->
 * [I. 스프링 프레임워크 개요](#i-스프링-프레임워크-개요)
   * [1. 스프링 프레임워크와 시작하기](#1-스프링-프레임워크와-시작하기)
   * [2. 스프링 프레임워크 소개](#2-스프링-프레임워크-소개)
@@ -363,7 +361,181 @@
         * [구체적인 환경 설정](#구체적인-환경-설정)
     * [11.9 자세한 리소스](#119-자세한-리소스)
   * [12. Spring AOP APIs](#12-spring-aop-apis)
-    * [12.1](#121)
+    * [12.1 소개](#121-소개)
+    * [12.2 스프링에서의 포인트컷 API](#122-스프링에서의-포인트컷-api)
+      * [컨셉](#컨셉)
+      * [포인트컷 조작](#포인트컷-조작)
+      * [AspectJ 표현식 포인트컷](#aspectj-표현식-포인트컷)
+      * [편리한 포인트컷 구현](#편리한-포인트컷-구현)
+        * [정적 포인트컷](#정적-포인트컷)
+        * [동적 포인트컷](#동적-포인트컷)
+      * [포인트컷 슈퍼클래스](#포인트컷-슈퍼클래스)
+      * [커스텀 포인트컷](#커스텀-포인트컷)
+    * [12.3 스프링에서의 어드바이스 API](#123-스프링에서의-어드바이스-api)
+      * [어드바이스 라이프사이클](#어드바이스-라이프사이클)
+      * [스프링에서의 어드바이스 타입](#스프링에서의-어드바이스-타입)
+        * [Interception around 어드바이스](#interception-around-어드바이스)
+        * [Before 어드바이스](#before-어드바이스-2)
+        * [Throws 어드바이스](#throws-어드바이스)
+        * [After Returning 어드바이스](#after-returning-어드바이스-2)
+        * [Introduction 어드바이스](#introduction-어드바이스)
+    * [12.4 스프링에서의 어드바이저 API](#124-스프링에서의-어드바이저-api)
+    * [12.5 AOP 프록시를 만들기 위한 ProxyFactoryBean 사용](#125-aop-프록시를-만들기-위한-proxyfactorybean-사용)
+      * [기본](#기본)
+      * [JavaBean 프로퍼티](#javabean-프로퍼티)
+      * [JDK와 CGLIB 기반 프록시](#jdk와-cglib-기반-프록시)
+      * [프록시 인터페이스](#프록시-인터페이스)
+      * [프록시 클래스](#프록시-클래스)
+      * [글로벌 어드바이저 사용](#글로벌-어드바이저-사용)
+    * [12.6 간결한 프록시 정의](#126-간결한-프록시-정의)
+    * [12.7 ProxyFactory를 이용한 프로그래밍적으로 AOP 프록시 생성](#127-proxyfactory를-이용한-프로그래밍적으로-aop-프록시-생성)
+    * [12.8 어드바이저 객체 조작](#128-어드바이저-객체-조작)
+    * [12.9 auto-proxy 기능 사용](#129-auto-proxy-기능-사용)
+      * [Autoproxy 빈 정의](#autoproxy-빈-정의)
+        * [BeanNameAutoProxyCreator](#beannameautoproxycreator)
+        * [DefaultAdvisorAutoProxyCreator](#defaultadvisorautoproxycreator)
+        * [AbstractAdvisorAutoProxyCreator](#abstractadvisorautoproxycreator)
+      * [메타데이터 중심의 auto-proxy 사용](#메타데이터-중심의-auto-proxy-사용)
+    * [12.10 TargetSource 사용](#1210-targetsource-사용)
+      * [핫 스왑가능한 타겟 소스](#핫-스왑가능한-타겟-소스)
+      * [풀링 타겟 소스](#풀링-타겟-소스)
+      * [프로토타입 타겟 소스](#프로토타입-타겟-소스)
+      * [ThreadLocal 타겟 소스](#threadlocal-타겟-소스)
+    * [12.11 새로운 어드바이스 타입 정의](#1211-새로운-어드바이스-타입-정의)
+    * [12.12 자세한 리소스](#1212-자세한-리소스)
+* [IV. 테스팅](#iv-테스팅)
+  * [13. 스프링 테스팅 소개](#13-스프링-테스팅-소개)
+  * [14. 유닛 테스팅](#14-유닛-테스팅)
+    * [14.1 Mock 객체](#141-mock-객체)
+      * [환경](#환경)
+      * [JNDI](#jndi)
+      * [Servlet API](#servlet-api)
+      * [Portlet API](#portlet-api)
+    * [14.2 유닛 테스팅 지원 클래스](#142-유닛-테스팅-지원-클래스)
+      * [일반적인 테스팅 유틸리티](#일반적인-테스팅-유틸리티)
+      * [Spring MVC](#spring-mvc)
+  * [15. 통합 테스팅](#15-통합-테스팅)
+    * [15.1 개요](#151-개요)
+    * [15.2 통합 테스팅의 목적](#152-통합-테스팅의-목적)
+      * [컨텍스트 관리 및 캐싱](#컨텍스트-관리-및-캐싱)
+      * [테스트 픽스처의 의존성 주입](#테스트-픽스처의-의존성-주입)
+      * [트랜잭션 관리](#트랜잭션-관리)
+      * [통합 테스팅을 위한 지원 클래스](#통합-테스팅을-위한-지원-클래스)
+    * [15.3 JDBC 테스팅 지원](#153-jdbc-테스팅-지원)
+    * [15.4 Annotation](#154-annotation)
+      * [스프링 테스팅 annotation](#스프링-테스팅-annotation)
+        * [@BootstrapWith](#bootstrapwith)
+        * [@ContextConfiguration](#contextconfiguration)
+        * [@WebAppConfiguration](#webappconfiguration)
+        * [@ContextHierarchy](#contexthierarchy)
+        * [@ActiveProfiles](#activeprofiles)
+        * [@TestPropertySource](#testpropertysource)
+        * [@DirtiesContext](#dirtiescontext)
+        * [@TestExecutionListeners](#testexecutionlisteners)
+        * [@Commit](#commit)
+        * [@Rollback](#rollback)
+        * [@BeforeTransaction](#beforetransaction)
+        * [@AfterTransaction](#aftertransaction)
+        * [@Sql](#sql)
+        * [@SqlConfig](#sqlconfig)
+        * [@SqlGroup](#sqlgroup)
+      * [표준 annotation 지원](#표준-annotation-지원)
+      * [스프링 JUnit 4 테스팅 annotation](#스프링-junit-4-테스팅-annotation)
+        * [@IfProfileValue](#ifprofilevalue)
+        * [@ProfileValueSourceConfiguration](#profilevaluesourceconfiguration)
+        * [@Timed](#timed)
+        * [@Repeat](#repeat)
+      * [테스팅을 위한 메타-annotation 지원](#테스팅을-위한-메타-annotation-지원)
+    * [15.5 스프링 TestContext 프레임워크](#155-스프링-testcontext-프레임워크)
+      * [주요 추상화](#주요-추상화)
+        * [TestContext](#testcontext)
+        * [TestContextManager](#testcontextmanager)
+        * [TestExecutionListener](#testexecutionlistener)
+        * [컨텍스트 로더](#컨텍스트-로더)
+      * [TestContext 프레임워크 부트스트래핑하기](#testcontext-프레임워크-부트스트래핑하기)
+      * [TestExecutionListener 설정](#testexecutionlistener-설정)
+        * [커스텀 TestExecutionListener 등록](#커스텀-testexecutionlistener-등록)
+        * [기본 TestExecutionListener의 자동 검색](#기본-testexecutionlistener의-자동-검색)
+        * [TestExecutionListener 순서 지정](#testexecutionlistener-순서-지정)
+        * [TestExecutionListener 병합](#testexecutionlistener-병합)
+      * [컨텍스트 관리](#컨텍스트-관리)
+        * [XML 리소스로 컨텍스트 설정](#xml-리소스로-컨텍스트-설정)
+        * [Groovy 스크립트로 컨텍스트 설정](#groovy-스크립트로-컨텍스트-설정)
+        * [annotated 클래스로 컨텍스트 설정](#annotated-클래스로-컨텍스트-설정)
+        * [XML, Groovy 스크립트, annotated 클래스 같이 쓰기](#xml-groovy-스크립트-annotated-클래스-같이-쓰기)
+        * [컨텍스트 이니셜라이저로 컨텍스트 설정](#컨텍스트-이니셜라이저로-컨텍스트-설정)
+        * [컨텍스트 설정 계승](#컨텍스트-설정-계승)
+        * [환경 프로파일로 컨텍스트 설정](#환경-프로파일로-컨텍스트-설정)
+        * [테스트 프로퍼티 소스로 컨텍스트 설정](#테스트-프로퍼티-소스로-컨텍스트-설정)
+        * [WebApplicationContext 로딩](#webapplicationcontext-로딩)
+        * [컨텍스트 캐싱](#컨텍스트-캐싱)
+        * [컨텍스트 계층화](#컨텍스트-계층화)
+      * [테스트 픽스쳐의 의존성 주입](#테스트-픽스쳐의-의존성-주입)
+      * [테스팅 request, session 스코프 빈](#테스팅-request-session-스코프-빈)
+      * [트랜잭션 관리](#트랜잭션-관리-1)
+        * [테스트 관리 트랜잭션](#테스트-관리-트랜잭션)
+        * [트랜잭션 활성화와 비활성화](#트랜잭션-활성화와-비활성화)
+        * [트랜잭션 롤백 및 동작](#트랜잭션-롤백-및-동작)
+        * [프로그래밍 방식의 트랜잭션 관리](#프로그래밍-방식의-트랜잭션-관리)
+        * [트랜잭션 외부의 코드 실행](#트랜잭션-외부의-코드-실행)
+        * [트랜잭션 매니저 설정](#트랜잭션-매니저-설정)
+        * [모든 트랜잭션과 관련된 annotation 시연](#모든-트랜잭션과-관련된-annotation-시연)
+      * [SQL 스크립트 실행](#sql-스크립트-실행)
+        * [프로그래밍 방식으로 SQL 스트립트 실행](#프로그래밍-방식으로-sql-스트립트-실행)
+        * [@Sql을 사용하여 선언적으로 SQL 스크립트 실행](#sql을-사용하여-선언적으로-sql-스크립트-실행)
+      * [TestContext 프레임워크가 지원하는 클래스](#testcontext-프레임워크가-지원하는-클래스)
+        * [스프링 JUnit 4 Runner](#스프링-junit-4-runner)
+        * [스프링 JUnit 4 Rules](#스프링-junit-4-rules)
+        * [JUnit 4가 지원하는 클래스](#junit-4가-지원하는-클래스)
+        * [TestNG가 지원하는 클래스](#testng가-지원하는-클래스)
+    * [15.6 Spring MVC 테스트 프레임워크](#156-spring-mvc-테스트-프레임워크)
+      * [서버 사이드 테스트](#서버-사이드-테스트)
+        * [정적 임포트](#정적-임포트)
+        * [설정 옵션](#설정-옵션)
+        * [Request 수행하기](#request-수행하기)
+        * [기대 정의](#기대-정의)
+        * [필터 등록](#필터-등록)
+        * [Out-of-Container와 End-to-End 통합 테스트의 차이점](#out-of-container와-end-to-end-통합-테스트의-차이점)
+        * [자세한 서버 사이드 테스트 예제](#자세한-서버-사이드-테스트-예제)
+      * [HtmlUnit 통하](#htmlunit-통하)
+        * [왜 HtmlUnit 통합?](#왜-htmlunit-통합)
+        * [MockMvc와 HtmlUnit](#mockmvc와-htmlunit)
+        * [MockMvc와 WebDriver](#mockmvc와-webdriver)
+        * [MockMvc와 Geb](#mockmvc와-geb)
+      * [클라이언트 사이드 REST 테스트](#클라이언트-사이드-rest-테스트)
+        * [정적 임포트](#정적-임포트-1)
+        * [클라이언트 사이드 REST 테스트의 자세한 예제](#클라이언트-사이드-rest-테스트의-자세한-예제)
+    * [15.7 PetClinic 예제](#157-petclinic-예제)
+  * [16. 자세한 리소스](#16-자세한-리소스)
+* [V. 데이터 접근](#v-데이터-접근)
+  * [17. 트랜잭션 관리](#17-트랜잭션-관리)
+    * [17.1 스프링 프레임워크 트랜잭션 관리에 대한 소개](#171-스프링-프레임워크-트랜잭션-관리에-대한-소개)
+    * [17.2 스프링 프레임워크의 트랜잭션 지원 모델의 이점](#172-스프링-프레임워크의-트랜잭션-지원-모델의-이점)
+      * [글로벌 트랜잭션](#글로벌-트랜잭션)
+      * [로컬 트랜잭션](#로컬-트랜잭션)
+      * [스프링 프레임워크의 일관된 프로그래밍 모델](#스프링-프레임워크의-일관된-프로그래밍-모델)
+    * [17.3 스프링 프레임워크 트랜잭션 추출 이해](#173-스프링-프레임워크-트랜잭션-추출-이해)
+    * [17.4 트랜잭션과 동기적 리소스](#174-트랜잭션과-동기적-리소스)
+      * [높은 수준의 동기화 접근 방식](#높은-수준의-동기화-접근-방식)
+      * [낮은 수준의 동기화 접근 방식](#낮은-수준의-동기화-접근-방식)
+      * [TransactionAwareDataSourceProxy](#transactionawaredatasourceproxy)
+    * [17.5 선언적인 트랜잭션 관리](#175-선언적인-트랜잭션-관리)
+      * [스프링 프레임워크의 선언적인 트랜잭션 구현 이해](#스프링-프레임워크의-선언적인-트랜잭션-구현-이해)
+      * [선언적인 트랜잭션 구현의 예제](#선언적인-트랜잭션-구현의-예제)
+      * [선언적인 트랜잭션 롤백](#선언적인-트랜잭션-롤백)
+      * [다른 빈에 대해 다른 트랜잭션 의미 설정](#다른-빈에-대해-다른-트랜잭션-의미-설정)
+      * [<tx:advice /> 세팅](#txadvice-세팅)
+      * [@Transactional 사용](#transactional-사용)
+        * [@Transactional 세팅](#transactional-세팅)
+        * [여러 개의 트랜잭션 매니저와 @Transactional](#여러-개의-트랜잭션-매니저와-transactional)
+        * [커스텀 숏컷 annotation](#커스텀-숏컷-annotation)
+      * [트랜잭션 전파](#트랜잭션-전파)
+        * [Required](#required-1)
+        * [RequiresNew](#requiresnew)
+        * [Nested](#nested)
+      * [트랜잭션 작업에 대한 조언](#트랜잭션-작업에-대한-조언)
+      * [@Transactional과 AspectJ 사용하기](#transactional과-aspectj-사용하기)
+    * [17.6 프로그래밍적인 트랜잭션 관리](#176-프로그래밍적인-트랜잭션-관리)
 
 <!-- tocstop -->
 
@@ -1076,4 +1248,352 @@
 
 ## 12. Spring AOP APIs
 
-### 12.1
+### 12.1 소개
+
+### 12.2 스프링에서의 포인트컷 API
+
+#### 컨셉
+
+#### 포인트컷 조작
+
+#### AspectJ 표현식 포인트컷
+
+#### 편리한 포인트컷 구현
+
+##### 정적 포인트컷
+
+##### 동적 포인트컷
+
+#### 포인트컷 슈퍼클래스
+
+#### 커스텀 포인트컷
+
+### 12.3 스프링에서의 어드바이스 API
+
+#### 어드바이스 라이프사이클
+
+#### 스프링에서의 어드바이스 타입
+
+##### Interception around 어드바이스
+
+##### Before 어드바이스
+
+##### Throws 어드바이스
+
+##### After Returning 어드바이스
+
+##### Introduction 어드바이스
+
+### 12.4 스프링에서의 어드바이저 API
+
+### 12.5 AOP 프록시를 만들기 위한 ProxyFactoryBean 사용
+
+#### 기본
+
+#### JavaBean 프로퍼티
+
+#### JDK와 CGLIB 기반 프록시
+
+#### 프록시 인터페이스
+
+#### 프록시 클래스
+
+#### 글로벌 어드바이저 사용
+
+### 12.6 간결한 프록시 정의
+
+### 12.7 ProxyFactory를 이용한 프로그래밍적으로 AOP 프록시 생성
+
+### 12.8 어드바이저 객체 조작
+
+### 12.9 auto-proxy 기능 사용
+
+#### Autoproxy 빈 정의
+
+##### BeanNameAutoProxyCreator
+
+##### DefaultAdvisorAutoProxyCreator
+
+##### AbstractAdvisorAutoProxyCreator
+
+#### 메타데이터 중심의 auto-proxy 사용
+
+### 12.10 TargetSource 사용
+
+#### 핫 스왑가능한 타겟 소스
+
+#### 풀링 타겟 소스
+
+#### 프로토타입 타겟 소스
+
+#### ThreadLocal 타겟 소스
+
+### 12.11 새로운 어드바이스 타입 정의
+
+### 12.12 자세한 리소스
+
+# IV. 테스팅
+
+## 13. 스프링 테스팅 소개
+
+## 14. 유닛 테스팅
+
+### 14.1 Mock 객체
+
+#### 환경
+
+#### JNDI
+
+#### Servlet API
+
+#### Portlet API
+
+### 14.2 유닛 테스팅 지원 클래스
+
+#### 일반적인 테스팅 유틸리티
+
+#### Spring MVC
+
+## 15. 통합 테스팅
+
+### 15.1 개요
+
+### 15.2 통합 테스팅의 목적
+
+#### 컨텍스트 관리 및 캐싱
+
+#### 테스트 픽스처의 의존성 주입
+
+#### 트랜잭션 관리
+
+#### 통합 테스팅을 위한 지원 클래스
+
+### 15.3 JDBC 테스팅 지원
+
+### 15.4 Annotation
+
+#### 스프링 테스팅 annotation
+
+##### @BootstrapWith
+
+##### @ContextConfiguration
+
+##### @WebAppConfiguration
+
+##### @ContextHierarchy
+
+##### @ActiveProfiles
+
+##### @TestPropertySource
+
+##### @DirtiesContext
+
+##### @TestExecutionListeners
+
+##### @Commit
+
+##### @Rollback
+
+##### @BeforeTransaction
+
+##### @AfterTransaction
+
+##### @Sql
+
+##### @SqlConfig
+
+##### @SqlGroup
+
+#### 표준 annotation 지원
+
+#### 스프링 JUnit 4 테스팅 annotation
+
+##### @IfProfileValue
+
+##### @ProfileValueSourceConfiguration
+
+##### @Timed
+
+##### @Repeat
+
+#### 테스팅을 위한 메타-annotation 지원
+
+### 15.5 스프링 TestContext 프레임워크
+
+#### 주요 추상화
+
+##### TestContext
+
+##### TestContextManager
+
+##### TestExecutionListener
+
+##### 컨텍스트 로더
+
+#### TestContext 프레임워크 부트스트래핑하기
+
+#### TestExecutionListener 설정
+
+##### 커스텀 TestExecutionListener 등록
+
+##### 기본 TestExecutionListener의 자동 검색
+
+##### TestExecutionListener 순서 지정
+
+##### TestExecutionListener 병합
+
+#### 컨텍스트 관리
+
+##### XML 리소스로 컨텍스트 설정
+
+##### Groovy 스크립트로 컨텍스트 설정
+
+##### annotated 클래스로 컨텍스트 설정
+
+##### XML, Groovy 스크립트, annotated 클래스 같이 쓰기
+
+##### 컨텍스트 이니셜라이저로 컨텍스트 설정
+
+##### 컨텍스트 설정 계승
+
+##### 환경 프로파일로 컨텍스트 설정
+
+##### 테스트 프로퍼티 소스로 컨텍스트 설정
+
+##### WebApplicationContext 로딩
+
+##### 컨텍스트 캐싱
+
+##### 컨텍스트 계층화
+
+#### 테스트 픽스쳐의 의존성 주입
+
+#### 테스팅 request, session 스코프 빈
+
+#### 트랜잭션 관리
+
+##### 테스트 관리 트랜잭션
+
+##### 트랜잭션 활성화와 비활성화
+
+##### 트랜잭션 롤백 및 동작
+
+##### 프로그래밍 방식의 트랜잭션 관리
+
+##### 트랜잭션 외부의 코드 실행
+
+##### 트랜잭션 매니저 설정
+
+##### 모든 트랜잭션과 관련된 annotation 시연
+
+#### SQL 스크립트 실행
+
+##### 프로그래밍 방식으로 SQL 스트립트 실행
+
+##### @Sql을 사용하여 선언적으로 SQL 스크립트 실행
+
+#### TestContext 프레임워크가 지원하는 클래스
+
+##### 스프링 JUnit 4 Runner
+
+##### 스프링 JUnit 4 Rules
+
+##### JUnit 4가 지원하는 클래스
+
+##### TestNG가 지원하는 클래스
+
+### 15.6 Spring MVC 테스트 프레임워크
+
+#### 서버 사이드 테스트
+
+##### 정적 임포트
+
+##### 설정 옵션
+
+##### Request 수행하기
+
+##### 기대 정의
+
+##### 필터 등록
+
+##### Out-of-Container와 End-to-End 통합 테스트의 차이점
+
+##### 자세한 서버 사이드 테스트 예제
+
+#### HtmlUnit 통하
+
+##### 왜 HtmlUnit 통합?
+
+##### MockMvc와 HtmlUnit
+
+##### MockMvc와 WebDriver
+
+##### MockMvc와 Geb
+
+#### 클라이언트 사이드 REST 테스트
+
+##### 정적 임포트
+
+##### 클라이언트 사이드 REST 테스트의 자세한 예제
+
+### 15.7 PetClinic 예제
+
+## 16. 자세한 리소스
+
+# V. 데이터 접근
+
+## 17. 트랜잭션 관리
+
+### 17.1 스프링 프레임워크 트랜잭션 관리에 대한 소개
+
+### 17.2 스프링 프레임워크의 트랜잭션 지원 모델의 이점
+
+#### 글로벌 트랜잭션
+
+#### 로컬 트랜잭션
+
+#### 스프링 프레임워크의 일관된 프로그래밍 모델
+
+### 17.3 스프링 프레임워크 트랜잭션 추출 이해
+
+### 17.4 트랜잭션과 동기적 리소스
+
+#### 높은 수준의 동기화 접근 방식
+
+#### 낮은 수준의 동기화 접근 방식
+
+#### TransactionAwareDataSourceProxy
+
+### 17.5 선언적인 트랜잭션 관리
+
+#### 스프링 프레임워크의 선언적인 트랜잭션 구현 이해
+
+#### 선언적인 트랜잭션 구현의 예제
+
+#### 선언적인 트랜잭션 롤백
+
+#### 다른 빈에 대해 다른 트랜잭션 의미 설정
+
+#### <tx:advice /> 세팅
+
+#### @Transactional 사용
+
+##### @Transactional 세팅
+
+##### 여러 개의 트랜잭션 매니저와 @Transactional
+
+##### 커스텀 숏컷 annotation
+
+#### 트랜잭션 전파
+
+##### Required
+
+##### RequiresNew
+
+##### Nested
+
+#### 트랜잭션 작업에 대한 조언
+
+#### @Transactional과 AspectJ 사용하기
+
+### 17.6 프로그래밍적인 트랜잭션 관리
